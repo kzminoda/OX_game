@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.3.0/prototype.js"></script>
+        <script type="text/javascript">
+            var flag = 0;
+            var data = [
+                [0,0,0],
+                [0,0,0],
+                [0,0,0]
+            ];
+            var finish = 0;
+
+            window.onload = function(){
+                $('console').innerHTML = "先手からどうぞ。";
+            }
+
+            function action(x,y){
+                if(finish == 1) return 1;
+                if(check_duplication(x,y) == 0){
+                    if(flag == 0){
+                        data[x][y] = 1;
+                        $('p' + x + y).innerHTML = "O";
+                        flag = 1;
+                        $('console').innerHTML = '後手どうぞ';
+                    }
+                    else if(flag == 1){
+                        data[x][y] = 2;
+                        $('p' + x + y).innerHTML = "X";
+                        flag = 0;
+                        $('console').innerHTML = '先手どうぞ';
+                    }
+                    else{
+                        
+                    }
+                }
+                else{
+                    let msg = flag==0?'先手':'後手';
+                    $('console').innerHTML = 'もう一度' + msg + 'さんお願いします。';
+                }
+
+                let link = '　　　<a href="javascript:void();" onclick="reload()">もう一度チャレンジする</a>';
+                if(check_victory() == 1){
+                    $('console').innerHTML = '先手の勝ち' + link;
+                    finish = 1;
+                }
+                else if(check_victory() == 2){
+                    $('console').innerHTML = '後手の勝ち' + link;
+                    finish = 1;
+                }
+                else if(check_victory() == 3){
+                    $('console').innerHTML = '引き分けです' + link;
+                    finish = 1;
+                }
+            }
+
+            function reload(){
+                location.reload();
+            }
+
+            function check_victory(){
+                for (let i=0; i<=2; i++){
+                    if(data[i][0] == data[i][1] && data[i][2] == data[i][1]){
+                        return data[i][0]!=0?data[i][0]:0;
+                    }
+                }
+
+                for (let i=0; i<=2; i++){
+                    if(data[0][i] == data[1][i] && data[2][i] == data[1][i]){
+                        return data[0][i]!=0?data[0][i]:0;
+                    }
+                }
+
+                if(data[0][0] == data[1][1] && data[2][2] == data[1][1]){
+                    return data[0][0]!=0?data[0][0]:0;
+                }
+
+                if(data[2][0] == data[1][1] && data[0][2] == data[1][1]){
+                    return data[2][0]!=0?data[2][0]:0;
+                }
+                
+                let f = 0;
+                for (let i=0; i<=2; i++){
+                    for (let j=0; j<=2; j++){
+                        if(data[i][j] == 0) f = 1;
+                    }
+                }
+                if(f == 0){
+                    return 3;
+                }
+                else{
+                    return 0;
+                }
+
+            }
+
+            function check_duplication(x,y){
+                if(data[x][y] == 0){
+                    return 0;
+                }
+                else{
+                    return 1;
+                }
+
+            }
+        </script>
+        <style type="text/css">
+            td{
+                font-size: 100px;
+                width:  150px;
+                height: 110px;
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+        <title>OXゲーム</title>
+    </head>
+    <body>
+        <span id="console"></span>
+        <table border="1" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="center" onclick="action(0,0)"><span id="p00">&nbsp;</span></td>
+                <td align="center" onclick="action(0,1)"><span id="p01">&nbsp;</span></td>
+                <td align="center" onclick="action(0,2)"><span id="p02">&nbsp;</span></td>
+            </tr>
+            <tr>
+                <td align="center" onclick="action(1,0)"><span id="p10">&nbsp;</span></td>
+                <td align="center" onclick="action(1,1)"><span id="p11">&nbsp;</span></td>
+                <td align="center" onclick="action(1,2)"><span id="p12">&nbsp;</span></td>
+            </tr>
+            <tr>
+                <td align="center" onclick="action(2,0)"><span id="p20">&nbsp;</span></td>
+                <td align="center" onclick="action(2,1)"><span id="p21">&nbsp;</span></td>
+                <td align="center" onclick="action(2,2)"><span id="p22">&nbsp;</span></td>
+            </tr>
+        </table>
+    </body>
+</html>
